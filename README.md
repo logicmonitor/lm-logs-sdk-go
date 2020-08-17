@@ -1,2 +1,2 @@
-# lm-logs-sdk-go
+# lm-logs-sdk-go(beta)
 Go SDK for lm-logs
