@@ -3,15 +3,16 @@ package ingest
 import (
 	"encoding/json"
 	"fmt"
-	uuid "github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type Response struct {
-	Success   bool         				`json:"success"`
-	Message   string       				`json:"message"`
-	Errors    []map[string]interface{} 	`json:"errors"`
+	Success   bool                     `json:"success"`
+	Message   string                   `json:"message"`
+	Errors    []map[string]interface{} `json:"errors"`
 	RequestId uuid.UUID
 }
 

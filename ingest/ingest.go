@@ -18,16 +18,11 @@ type Event struct {
 	ResourceId map[string]interface{} `json:"_lm.resourceId"`
 }
 
-
-
-
 type Ingest struct {
 	HostUrl   string
 	AccessID  string
 	AccessKey string
 }
-
-
 
 func (in *Ingest) SendLogs(events []Event) (*Response, error) {
 	url := in.HostUrl + "/rest/log/ingest"
