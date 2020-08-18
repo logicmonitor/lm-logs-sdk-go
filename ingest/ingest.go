@@ -12,10 +12,10 @@ const (
 	method       = "POST"
 )
 
-type Event struct {
-	Message    string                 `json:"msg"`
-	Timestamp  time.Time              `json:"timestamp"`
-	ResourceId map[string]interface{} `json:"_lm.resourceId"`
+type Log struct {
+	Message    string            `json:"msg"`
+	Timestamp  time.Time         `json:"timestamp"`
+	ResourceId map[string]string `json:"_lm.resourceId"`
 }
 
 type Ingest struct {
@@ -24,10 +24,10 @@ type Ingest struct {
 	AccessKey string
 }
 
-func (in *Ingest) SendLogs(events []Event) (*Response, error) {
+func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	url := in.HostUrl + "/rest/log/ingest"
 
-	body, err := json.Marshal(events)
+	body, err := json.Marshal(logs)
 	if err != nil {
 		return nil, err
 	}

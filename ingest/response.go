@@ -24,11 +24,12 @@ func convertHttpToIngestResponse(resp *http.Response) (*Response, error) {
 		return nil, err
 	}
 
+	_ = resp.Body.Close()
+
 	err = json.Unmarshal(body, ingestResponse)
 	if err != nil {
 		ingestResponse.Success = false
 		ingestResponse.Message = fmt.Sprintf("Invalid Response! , Status Code: %d , Body: %s", resp.StatusCode, string(body[:]))
-
 		return ingestResponse, err
 	}
 	ingestResponse.RequestId = uuid.FromStringOrNil(resp.Header.Get("x-request-id"))
