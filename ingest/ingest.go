@@ -23,7 +23,7 @@ type Ingest struct {
 }
 
 func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
-	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest",in.CompanyName)
+	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest", in.CompanyName)
 
 	body, err := json.Marshal(logs)
 	if err != nil {
