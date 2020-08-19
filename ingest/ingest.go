@@ -3,41 +3,39 @@ package ingest
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
-)
 
-const (
-	resourcePath = "/log/ingest"
-	method       = "POST"
+	"../apitoken"
 )
 
 type Log struct {
 	Message    string            `json:"msg"`
 	Timestamp  time.Time         `json:"timestamp"`
-	ResourceId map[string]string `json:"_lm.resourceId"`
+	ResourceID map[string]string `json:"_lm.resourceId"`
 }
 
 type Ingest struct {
-	HostUrl   string
-	AccessID  string
-	AccessKey string
+	CompanyName string
+	AccessID    string
+	AccessKey   string
 }
 
 func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
-	url := in.HostUrl + "/rest/log/ingest"
+	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest",in.CompanyName)
 
 	body, err := json.Marshal(logs)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
-	lMv1Token := generateLMv1Token(in.AccessID, in.AccessKey, body)
+	lMv1Token := apitoken.GenerateLMv1Token(in.AccessID, in.AccessKey, body)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", lMv1Token.String())
@@ -47,7 +45,7 @@ func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 		return nil, err
 	}
 
-	ingestResponse, err := convertHttpToIngestResponse(resp)
+	ingestResponse, err := convertHTTPToIngestResponse(resp)
 	if err != nil {
 		return ingestResponse, err
 	}

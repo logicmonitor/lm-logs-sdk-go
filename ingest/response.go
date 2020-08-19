@@ -13,10 +13,10 @@ type Response struct {
 	Success   bool                     `json:"success"`
 	Message   string                   `json:"message"`
 	Errors    []map[string]interface{} `json:"errors"`
-	RequestId uuid.UUID
+	RequestID uuid.UUID
 }
 
-func convertHttpToIngestResponse(resp *http.Response) (*Response, error) {
+func convertHTTPToIngestResponse(resp *http.Response) (*Response, error) {
 	ingestResponse := &Response{}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -32,7 +32,7 @@ func convertHttpToIngestResponse(resp *http.Response) (*Response, error) {
 		ingestResponse.Message = fmt.Sprintf("Invalid Response! , Status Code: %d , Body: %s", resp.StatusCode, string(body[:]))
 		return ingestResponse, err
 	}
-	ingestResponse.RequestId = uuid.FromStringOrNil(resp.Header.Get("x-request-id"))
+	ingestResponse.RequestID = uuid.FromStringOrNil(resp.Header.Get("x-request-id"))
 
 	return ingestResponse, nil
 }

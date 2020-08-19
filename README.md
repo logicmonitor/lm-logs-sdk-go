@@ -1,5 +1,5 @@
 # lm-logs-sdk-go(beta)
-Go SDK for sending logs to Logic Monitor
+Go SDK for sending logs to LogicMonitor
 
 ```go
 // Initialize the library

@@ -1,4 +1,4 @@
-package ingest
+package apitoken
 
 import (
 	"crypto/hmac"
@@ -10,13 +10,18 @@ import (
 	"time"
 )
 
-type lmv1Token struct {
+const (
+	resourcePath = "/log/ingest"
+	method       = "POST"
+)
+
+type Lmv1Token struct {
 	AccessID  string
 	Signature string
 	Epoch     time.Time
 }
 
-func (t *lmv1Token) String() string {
+func (t *Lmv1Token) String() string {
 	builder := strings.Builder{}
 	append := func(s string) {
 		if _, err := builder.WriteString(s); err != nil {
@@ -33,7 +38,7 @@ func (t *lmv1Token) String() string {
 	return builder.String()
 }
 
-func generateLMv1Token(accessId, accessKey string, body []byte) *lmv1Token {
+func GenerateLMv1Token(accessID, accessKey string, body []byte) *Lmv1Token {
 
 	epochTime := time.Now()
 	epoch := strconv.FormatInt(epochTime.UnixNano()/1000000, 10)
@@ -55,8 +60,8 @@ func generateLMv1Token(accessId, accessKey string, body []byte) *lmv1Token {
 	hash := h.Sum(nil)
 	hexString := hex.EncodeToString(hash)
 	signature := base64.StdEncoding.EncodeToString([]byte(hexString))
-	return &lmv1Token{
-		AccessID:  accessId,
+	return &Lmv1Token{
+		AccessID:  accessID,
 		Signature: signature,
 		Epoch:     epochTime,
 	}
