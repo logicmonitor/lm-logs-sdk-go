@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"../apitoken"
+	"github.com/logicmonitor/lm-logs-sdk-go/apitoken"
 )
 
 type Log struct {
