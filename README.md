@@ -4,7 +4,7 @@ Go SDK for sending logs to LogicMonitor
 ```go
 // Initialize the library
 lmIngest := ingest.Ingest{
-	HostUrl:   "https://<<account-name>>.logicmonitor.com",
+	CompanyName: "<<account-name>>",
 	AccessID:  "<<accesss-id>>",
 	AccessKey: "<<access-key>>",
 }
