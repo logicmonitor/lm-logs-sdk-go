@@ -13,7 +13,7 @@ type Response struct {
 	Success   bool                     `json:"success"`
 	Message   string                   `json:"message"`
 	Errors    []map[string]interface{} `json:"errors"`
-	RequestID uuid.UUID
+	RequestID uuid.UUID                `json:"requestId"`
 }
 
 func convertHTTPToIngestResponse(resp *http.Response) (*Response, error) {
