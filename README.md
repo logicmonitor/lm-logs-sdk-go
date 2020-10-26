@@ -11,7 +11,7 @@ lmIngest := ingest.Ingest{
 
 // Create logs
 logs := []ingest.Log{{
-    Message:    "Hello from Logic Monitor!",
+    Message:    "Hello from LogicMonitor!",
     ResourceID: map[string]string{"<<lm-property>>": "<<lm-property-value>>"},
 }}
 
