@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	uuid "github.com/satori/go.uuid"
+	uuid "github.com/google/uuid"
 )
 
 type Response struct {
@@ -32,7 +32,7 @@ func convertHTTPToIngestResponse(resp *http.Response) (*Response, error) {
 		ingestResponse.Message = fmt.Sprintf("Invalid Response! , Status Code: %d , Body: %s", resp.StatusCode, string(body[:]))
 		return ingestResponse, err
 	}
-	ingestResponse.RequestID = uuid.FromStringOrNil(resp.Header.Get("x-request-id"))
+	ingestResponse.RequestID, _ = uuid.Parse(resp.Header.Get("x-request-id"))
 
 	return ingestResponse, nil
 }
