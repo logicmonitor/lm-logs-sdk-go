@@ -1,6 +1,8 @@
 # lm-logs-sdk-go(beta)
 Go SDK for sending logs to LogicMonitor
 
+**NOTE:** This SDK was created for use by LogicMonitor-built log integrations and is not intended to be used or supported otherwise.
+
 ```go
 // Initialize the library
 lmIngest := ingest.Ingest{
