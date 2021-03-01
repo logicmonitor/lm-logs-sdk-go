@@ -9,6 +9,7 @@ import (
 	uuid "github.com/google/uuid"
 )
 
+//Response will contain variable for responses from logingest
 type Response struct {
 	Success   bool                     `json:"success"`
 	Message   string                   `json:"message"`
