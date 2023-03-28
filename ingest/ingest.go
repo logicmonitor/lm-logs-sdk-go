@@ -15,6 +15,7 @@ type Log struct {
 	Message    string            `json:"msg"`
 	Timestamp  time.Time         `json:"timestamp"`
 	ResourceID map[string]string `json:"_lm.resourceId"`
+	Metadata   map[string]string `json:"metadata"`
 }
 
 //Ingest will contain details about endpoint authorisation and code version details
@@ -30,7 +31,21 @@ type Ingest struct {
 func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest", in.CompanyName)
 
-	body, err := json.Marshal(logs)
+	var logsMapArray []map[string]interface{}
+
+	for i := 0; i < len(logs); i++ {
+		logMap := make(map[string]interface{})
+		eachLog := logs[i]
+		logMap["msg"] = eachLog.Message
+		logMap["_lm.resourceId"] = eachLog.ResourceID
+		logMap["timestamp"] = eachLog.Timestamp.String()
+		for key, value := range eachLog.Metadata {
+			logMap[key] = value
+		}
+		logsMapArray = append(logsMapArray, logMap)
+	}
+
+	body, err := json.Marshal(logsMapArray)
 	if err != nil {
 		return nil, err
 	}
