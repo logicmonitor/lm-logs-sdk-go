@@ -1,4 +1,4 @@
-# lm-logs-sdk-go(0.0.1)
+# lm-logs-sdk-go(0.1.0)
 Go SDK for sending logs to LogicMonitor
 
 **NOTE:** This SDK was created for use by LogicMonitor-built log integrations and is not intended to be used or supported otherwise.
