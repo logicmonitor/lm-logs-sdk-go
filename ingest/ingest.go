@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -35,7 +34,6 @@ type Ingest struct {
 func NewLogIngester(company string, accessId string, accessKey string, bearerToken string, logsource string, version string) (*Ingest, error) {
 	useBeareFrorAuth := false
 	if len(accessId) == 0 || len(accessKey) == 0 {
-		log.Println("Using bearer for auth")
 		useBeareFrorAuth = true
 	}
 	if useBeareFrorAuth == true && len(bearerToken) == 0 {
@@ -58,8 +56,6 @@ func NewLogIngester(company string, accessId string, accessKey string, bearerTok
 // SendLogs will be used to send logs to logingest
 func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest", in.CompanyName)
-	log.Println("Custom sdk by sidmyself...")
-	log.Println(url)
 
 	var logsMapArray []map[string]interface{}
 
@@ -86,7 +82,6 @@ func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	}
 
 	auth := in.GenerateAuthString(body)
-	log.Println(auth)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", auth)
