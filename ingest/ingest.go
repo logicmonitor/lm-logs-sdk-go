@@ -3,14 +3,16 @@ package ingest
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/logicmonitor/lm-logs-sdk-go/apitoken"
 )
 
-//Log will contain information about logs being sent to logingest
+// Log will contain information about logs being sent to logingest
 type Log struct {
 	Message    string            `json:"msg"`
 	Timestamp  time.Time         `json:"timestamp"`
@@ -18,18 +20,46 @@ type Log struct {
 	Metadata   map[string]string `json:"metadata"`
 }
 
-//Ingest will contain details about endpoint authorisation and code version details
+// Ingest will contain details about endpoint authorisation and code version details
 type Ingest struct {
-	CompanyName string
-	AccessID    string
-	AccessKey   string
-	LogSource   string
-	VersionID   string
+	CompanyName    string
+	AccessID       string
+	AccessKey      string
+	LogSource      string
+	VersionID      string
+	BearerToken    string
+	useBearerToken bool
 }
 
-//SendLogs will be used to send logs to logingest
+// create new ingest
+func NewLogIngester(company string, accessId string, accessKey string, bearerToken string, logsource string, version string) (*Ingest, error) {
+	useBeareFrorAuth := false
+	if len(accessId) == 0 || len(accessKey) == 0 {
+		log.Println("Using bearer for auth")
+		useBeareFrorAuth = true
+	}
+	if useBeareFrorAuth == true && len(bearerToken) == 0 {
+		// No valid mode of auth soecified
+		return nil, errors.New("Can not set up authentication with LogicMonitor. Either specify accessId and accessKey both or bearerToken")
+	}
+
+	return &Ingest{
+		CompanyName:    company,
+		AccessID:       accessId,
+		AccessKey:      accessKey,
+		LogSource:      logsource,
+		VersionID:      version,
+		useBearerToken: useBeareFrorAuth,
+		BearerToken:    bearerToken,
+	}, nil
+
+}
+
+// SendLogs will be used to send logs to logingest
 func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	url := fmt.Sprintf("https://%s.logicmonitor.com/rest/log/ingest", in.CompanyName)
+	log.Println("Custom sdk by sidmyself...")
+	log.Println(url)
 
 	var logsMapArray []map[string]interface{}
 
@@ -55,10 +85,11 @@ func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 		return nil, err
 	}
 
-	lMv1Token := apitoken.GenerateLMv1Token(in.AccessID, in.AccessKey, body)
+	auth := in.GenerateAuthString(body)
+	log.Println(auth)
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", lMv1Token.String())
+	req.Header.Set("Authorization", auth)
 	req.Header.Set("User-Agent", in.LogSource+"/"+in.VersionID)
 
 	resp, err := http.DefaultClient.Do(req)
@@ -72,4 +103,14 @@ func (in *Ingest) SendLogs(logs []Log) (*Response, error) {
 	}
 
 	return ingestResponse, nil
+}
+
+func (in *Ingest) GenerateAuthString(body []byte) string {
+
+	if in.useBearerToken == false {
+		return apitoken.GenerateLMv1Token(in.AccessID, in.AccessKey, body).String()
+
+	} else {
+		return fmt.Sprintf("Bearer %s", in.BearerToken)
+	}
 }
