@@ -13,10 +13,10 @@ import (
 
 // Log will contain information about logs being sent to logingest
 type Log struct {
-	Message    string            `json:"msg"`
-	Timestamp  time.Time         `json:"timestamp"`
-	ResourceID map[string]string `json:"_lm.resourceId"`
-	Metadata   map[string]string `json:"metadata"`
+	Message    string                 `json:"msg"`
+	Timestamp  time.Time              `json:"timestamp"`
+	ResourceID map[string]string      `json:"_lm.resourceId"`
+	Metadata   map[string]interface{} `json:"metadata"`
 }
 
 // Ingest will contain details about endpoint authorisation and code version details
